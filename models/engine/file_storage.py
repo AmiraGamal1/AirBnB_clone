@@ -1,6 +1,10 @@
 #!/usr/bin/python3
-"""file_storage module
-dictionary <--> json file"""
+"""
+file_storage module
+dictionary <--> json file
+"""
+
+
 import json
 from models.base_model import BaseModel
 from copy import deepcopy
@@ -10,6 +14,16 @@ from models.place import Place
 from models.user import User
 from models.review import Review
 from models.amenity import Amenity
+
+modules = {
+    "BaseModel": BaseModel,
+    "User": User,
+    "Place": Place,
+    "Amenity": Amenity,
+    "City": City,
+    "Review": Review,
+    "State": State
+}
 
 
 class FileStorage:
@@ -30,16 +44,18 @@ class FileStorage:
         """add object to dictionary __objects attributes:
             obj: instance of a class
         """
+        if obj.id in FileStorage.__objects:
+            return
         key = "{}.{}".format(obj.__class__.__name__, obj.id)
         FileStorage.__objects[key] = obj
 
     def save(self):
         """serializes __objects to the JSON file
-        with the path stored in __file_path"""
+            with the path stored in __file_path"""
         dictionary = {}
-        for k, v in FileStorage.__objects.items():
-            copy_v = deepcopy(v)
-            dictionary[k] = copy_v.to_dict()
+        for key, obj in FileStorage.__objects.items():
+            copy_obj = deepcopy(obj)
+            dictionary[key] = copy_obj.to_dict()
         with open(FileStorage.__file_path, "w") as f:
             json.dump(dictionary, f)
 
@@ -50,10 +66,8 @@ class FileStorage:
                 dictionary = json.load(f)
                 d = {}
                 for k, v in dictionary.items():
-                    class_name = v['__class__']
-                    obj = globals()[class_name]
-                    del v["__class__"]
+                    obj = modules[v['__class__']]
                     d[k] = obj(**v)
             FileStorage.__objects.update(d)
-        except FileNotFoundError:
+        except Exception:
             pass
