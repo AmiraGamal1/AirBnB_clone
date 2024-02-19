@@ -6,6 +6,6 @@ footer {
     border-top: 1px solid #CCCCCC;
     position: absolute;
     bottom: 0;
+    display: grid;
     text-align: center;
-    line-height: 60px;
 }
