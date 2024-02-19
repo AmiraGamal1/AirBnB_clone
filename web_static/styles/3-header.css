@@ -1,0 +1,12 @@
+/* 3-header.css */
+header {
+    height: 70px;
+    width: 100%;
+    background-color: white;
+    border-bottom: 1px solid #CCCCCC;
+    background-image: url("/web_static/images/logo.png");
+    background-repeat: no-repeat;
+    background-position: left center;
+    background-size: auto;
+    padding-left: 20px;
+}
